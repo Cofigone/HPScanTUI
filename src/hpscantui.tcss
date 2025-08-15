@@ -1,0 +1,160 @@
+Screen{
+    layout: grid;
+    grid-size: 2 3;
+}
+
+#title{
+    color: $accent;
+    column-span: 2;
+    text-align: center;
+    align-horizontal: center;
+}
+
+
+.printer_search #printer_text{
+    display: none;
+}
+
+.scanning #btn_scanning{
+    display: block;
+}
+
+.scanning #btn_start_scan{
+    display: none;
+}
+
+.printer_label{
+
+    align-horizontal: right;
+    text-align: right;
+}
+
+.printer_input{
+    margin: 1;
+    padding: 1;
+    height: 5;
+    width: 20;
+    align-horizontal: center;
+    text-align: center;
+    content-align: center middle;
+    border: none;
+}
+
+
+
+HorizontalGroup{
+    layout: grid;
+    grid-size: 5 1;
+    }
+
+VerticalGroup{
+    align: center middle;
+    content-align: center middle;
+    text-align: center;
+    background: $boost 80%;
+    # border: solid $accent;
+    }
+
+#bulk_scan_switch{
+    border: none;
+    padding: 1;
+    height: 4;
+    width: 10;
+}    
+
+#main_container{
+    layout: grid;
+    grid-size: 1 2;
+    row-span:2;
+    border: ascii blue;
+    background: $boost;
+    height: auto;
+    column-span: 2;
+}
+
+#output_dir_tree_group{
+    column-span: 2;
+    width: 100%;
+    height: auto;
+}
+
+#output_dir_tree{
+    width: 100%;
+    height: auto;
+}
+
+#output_dir_input{
+    column-span: 2;
+    width: 100%;
+    height: 3;
+}
+
+
+#scan_grid{
+    border: green;
+    height: auto;
+}
+
+#path_grid{
+    row-span: 2;
+    border: red;
+    height: auto;
+}
+
+
+
+#printer_container{
+    border: ascii $accent;
+    background: $boost;
+    height: 100%;
+}
+
+#capabilities_container{
+    layout: grid;
+    grid-size: 1 2;
+    grid-columns: auto;
+    grid-rows: auto;
+    border: ascii $accent;
+    background: $boost;
+    min-width: 50;
+    height: 100%;
+}
+
+
+
+#btn_start_scan{
+    margin: 1;
+    padding: 1;
+    height: 5;
+    width: 1fr;
+    align-horizontal: center;
+    text-align: center;
+    content-align: center middle;
+    border: none;
+}
+
+#btn_scanning{
+    margin: 1;
+    padding: 1;
+    height: 5;
+    width: 1fr;
+    align-horizontal: center;
+    text-align: center;
+    content-align: center middle;
+    border: none;
+    display: none;
+}
+
+#output_dir_input_group{
+    column-span: 2;
+}
+
+#progress_bar{
+    height: 1;
+    dock: bottom;
+    width: 100%;
+    margin: 1;
+    text-align: center;
+    content-align: center middle;
+
+}
