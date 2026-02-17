@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Flask Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hpscan-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - scandir:/scandir
+    environment:
+      - FLASK_ENV=production
+      - SCAN_DIR=/scandir
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+    networks:
+      - hpscan-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Vue.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hpscan-frontend
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - hpscan-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+# Named volumes for persistent storage
+volumes:
+  scandir:
+    driver: local
+    name: hpscan-scandir
+
+# Network for inter-container communication
+networks:
+  hpscan-network:
+    driver: bridge
+    name: hpscan-network
