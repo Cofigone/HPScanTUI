@@ -119,7 +119,7 @@ class Printer(Static):
             
             HorizontalGroup(
                 VerticalGroup(
-                    DirectoryTree("./", id="output_dir_tree", classes="directory_tree"),
+                    DirectoryTree("/", id="output_dir_tree", classes="directory_tree"),
                     id="output_dir_tree_group"
                 ),
                 VerticalGroup(
