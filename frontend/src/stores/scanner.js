@@ -2,7 +2,7 @@
  * Pinia store for scanner state management.
  */
 import { defineStore } from 'pinia'
-import { scannerApi, filesApi, bulkScanApi } from '../services/api'
+import { scannerApi, filesApi, bulkScanApi, configApi } from '../services/api'
 
 export const useScannerStore = defineStore('scanner', {
   state: () => ({
@@ -14,8 +14,13 @@ export const useScannerStore = defineStore('scanner', {
       colormode: 'RGB24',
       pdf: true,
       output: '',
-      output_dir: './scandir'
+      output_dir: null  // Will be fetched from backend
     },
+    
+    // Config loading state
+    isConfigLoading: false,
+    configLoadError: null,
+    configLoadRetries: 0,
     
     // Paper format dimensions
     paperFormats: {
@@ -78,6 +83,54 @@ export const useScannerStore = defineStore('scanner', {
   },
 
   actions: {
+    /**
+     * Fetch configuration from backend with retry logic
+     * @param {number} maxRetries - Maximum number of retry attempts
+     * @param {number} retryDelay - Delay between retries in milliseconds
+     */
+    async fetchConfig(maxRetries = 3, retryDelay = 2000) {
+      this.isConfigLoading = true
+      this.configLoadError = null
+      
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await configApi.getConfig()
+          if (response.data.success) {
+            this.config.output_dir = response.data.config.scan_dir
+            this.configLoadRetries = attempt - 1
+            this.isConfigLoading = false
+            return true
+          }
+        } catch (err) {
+          console.error(`Failed to fetch config (attempt ${attempt}/${maxRetries}):`, err)
+          this.configLoadRetries = attempt
+          
+          if (attempt < maxRetries) {
+            // Wait before retrying
+            await new Promise(resolve => setTimeout(resolve, retryDelay))
+          } else {
+            // All retries exhausted, use fallback
+            this.configLoadError = 'Could not connect to backend server'
+            this.config.output_dir = './scandir'  // Fallback to default
+            this.showNotification(
+              'Using default scan directory. Backend server may be unavailable.',
+              'warning'
+            )
+          }
+        }
+      }
+      
+      this.isConfigLoading = false
+      return false
+    },
+
+    /**
+     * Check if config is ready (output_dir is set)
+     */
+    isConfigReady() {
+      return this.config.output_dir !== null
+    },
+
     /**
      * Update scan configuration
      */

@@ -274,3 +274,33 @@ def check_printer():
         "ip": ip,
         "reachable": reachable
     })
+
+
+@scanner_bp.route('/config', methods=['GET'])
+def get_config():
+    """Get scanner configuration including scan directory.
+    
+    Returns:
+        JSON with scanner configuration
+    ---
+    responses:
+        200:
+            description: Scanner configuration
+            schema:
+                type: object
+                properties:
+                    success:
+                        type: boolean
+                    config:
+                        type: object
+                        properties:
+                            scan_dir:
+                                type: string
+                                description: Configured scan directory path
+    """
+    return jsonify({
+        "success": True,
+        "config": {
+            "scan_dir": current_app.config.get("SCAN_DIR", "./scandir")
+        }
+    })

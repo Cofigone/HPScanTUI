@@ -113,6 +113,18 @@ export const filesApi = {
 export const healthCheck = () => api.get('/health')
 
 /**
+ * Configuration API endpoints
+ */
+export const configApi = {
+  /**
+   * Get scanner configuration including scan directory
+   */
+  getConfig() {
+    return api.get('/scanner/config')
+  }
+}
+
+/**
  * Bulk scan API endpoints
  */
 export const bulkScanApi = {
@@ -187,5 +199,6 @@ export default {
   scanner: scannerApi,
   files: filesApi,
   bulkScan: bulkScanApi,
+  config: configApi,
   healthCheck
 }
